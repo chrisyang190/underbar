@@ -60,11 +60,11 @@
 
   	if (Array.isArray(collection)){
   	for (var i=0; i<collection.length; i++){
-  		var temp = iterator(collection[i],i,collection);
+  		iterator(collection[i],i,collection);
   	} 
   	} else {
   		for (var key in collection){
-  			var temp = iterator(collection[key], key, collection);
+  			iterator(collection[key], key, collection);
   		}
   	}
 
@@ -89,16 +89,55 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+  	var res = [];
+ 	if (Array.isArray(collection)){
+  		for (var i=0; i<collection.length; i++){
+  		var temp = test(collection[i],i,collection);
+  		if (temp == true) {
+  			res.push(collection[i]);
+  		}
+  	} 
+  	} else {
+  		for (var key in collection){
+  			var temp = test(collection[key], key, collection);
+  			if (temp == true) {
+  			res.push(collection[i]);
+  		}
+  		}
+  	}
+  	return res;
   };
-
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    										//collection has array of values we need to pick from [1,2,3,4]
+    var res =[];
+    _.filter(collection, function(s){
+    	if (!test(s)){
+    		res.push(s);
+    	}
+    });
+    return res; 
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+  	var obj = {};
+  	var res = [];
+  	_.each(array,function(s){
+  		obj[s] ? obj[s]++ : obj[s]=1;
+  	});
+
+  	for (var key in obj){
+  		if (parseInt(key) !== NaN) {
+  			res.push(parseInt(key));
+  		} else {
+  		res.push(key);
+  	}
+  	}
+
+  	return res;
   };
 
 
@@ -107,6 +146,11 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var res = [];
+    _.each(collection, function(value,index,collection2){
+    	res.push(iterator(value, index, collection2));
+    })
+    return res;
   };
 
   /*
