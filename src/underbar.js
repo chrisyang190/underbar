@@ -212,11 +212,13 @@
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
+
+    //see if [1,2,3] (collection) contains 3 (target)
     return _.reduce(collection, function(wasFound, item) {
       if (wasFound) {
         return true;
       }
-      return item === target;
+      return item === target; //if 1===3 --> returns false
     }, false);
   };
 
@@ -224,12 +226,46 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (typeof iterator !== 'undefined'){
+    return _.reduce(collection, function(passTest, item){
+    	if (!passTest) {
+    		return false;
+    	} else if (iterator(item)){
+    		return true;
+    	} else if (!iterator(item)){
+    		return false;
+    	}
+    }, true);
+	} else {
+		return _.reduce(collection,function(passTest, item){
+			if(!passTest){
+				return false;
+			} else if (item) {
+				return true;
+			} else if (!item){
+				return false;
+			}
+		}, true);
+	}
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    // [2,2,3] some even?
+    // every => some
+    // ! every && ! none --> some
+ 
+   var res = false;
+
+    _.each(collection, function(s) {
+      if (_.every([s], iterator)) {
+        res = true;
+      }
+    });
+
+    return res;
   };
 
 
@@ -252,7 +288,10 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-  };
+  	//for loop through arguments
+  	//for loop through keys in object
+
+  	
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
