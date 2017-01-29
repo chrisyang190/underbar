@@ -432,7 +432,6 @@
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
 
-
     return _.map(collection, function(s){
       if (typeof functionOrKey == 'function') {
         return functionOrKey.apply(s,args);
@@ -440,7 +439,6 @@
         return s[functionOrKey].apply(s,args);
       }
     });
-    //return functionOrKey.apply(this, collection);
 
   };
 
@@ -449,6 +447,17 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+
+  if (typeof iterator == 'function'){
+    return collection.sort(function(a,b){
+      return iterator(a)-iterator(b);
+    });
+  } else {
+    return collection.sort(function(a,b){
+      return a[iterator] - b[iterator];
+    });
+  }
+   
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -457,6 +466,24 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var res = [];
+    var args = Array.prototype.slice.call(arguments); //[[a,b,c,d],[1,2,3]]
+    //determine longest argument array length
+   var longest = 0;
+    for (var i =0; i<args.length;i++){
+      if (args[i].length > longest){
+        longest = args[i].length;
+      }
+    }
+    //nested for loop to pair each of them
+    for (var j=0; j<longest;j++){ //y axis
+       var inner = [];
+      for (var k =0; k<args.length;k++){ //x axis
+        inner.push(args[k][j]);
+      }
+      res.push(inner);
+    }
+    return res;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
