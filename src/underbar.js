@@ -491,11 +491,53 @@
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    
+    var res = [];
+    
+  function arrayPusher(arr){
+      for(var i =0; i<arr.length; i++) {
+        //if not array, push
+        if (!Array.isArray(arr[i])) {
+          res.push(arr[i]);
+        } else {
+          // if is Array, check to see if child of array is array
+          arrayPusher(arr[i]);
+        }
+      }
+    }
+    arrayPusher(nestedArray);
+    return res;
+    
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var res = [];
+    var args = Array.prototype.slice.call(arguments);
+    //determine shortest array
+    var shortestLength = Infinity;
+    var shortest;
+    for (var i =0; i<args.length;i++){
+      if (args[i].length < shortestLength){
+        shortestLength = args[i].length;
+        shortest = args[i];
+      }
+    }
+    //loop through shortest array to see if other arguments arrays contain the indexed value
+    _.each(shortest, function(s){ // for each value in shortest
+      var tempArray = [];
+      for (var j=0; j<args.length;j++){
+        if (_.contains(args[j],s)){
+          tempArray.push(s);
+        }
+      } // look through each argument array to see if it contains s
+      // if s appears the same number of times as there are arguments, add s to the result
+      if (tempArray.length == args.length){
+        res.push(s);
+      }
+    });
+    return res;
   };
 
   // Take the difference between one array and a number of other arrays.
