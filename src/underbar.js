@@ -542,7 +542,22 @@
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
-  _.difference = function(array) {
+  _.difference = function(array) { //[1, 2, 3, 4], [2, 30, 40], [1, 11, 111]
+    var res = [];
+    var args = Array.prototype.slice.call(arguments,1);
+
+    _.each(array, function(s){ // for each value in first argument
+      var tempArray = [];
+      for (var j=0; j<args.length;j++){
+        if (!_.contains(args[j],s)){
+          tempArray.push(s);
+        }
+      }
+       if (tempArray.length == args.length){
+        res.push(s);
+      }
+    });
+      return res;
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
@@ -551,5 +566,20 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+
+    //Enabler of function to run
+    var canTrigger = true;
+
+    var delay = function(){
+      return canTrigger = true;
+    }; // delays when original function can be invoked again
+
+    return function(){
+      if(canTrigger){
+        func.apply(this, arguments);
+        canTrigger = false;
+        setTimeout(delay, wait);
+      }
+    }
   };
 }());
